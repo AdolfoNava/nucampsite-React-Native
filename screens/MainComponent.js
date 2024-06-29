@@ -8,9 +8,10 @@ import DirectoryScreen from "./DirectoryScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import logo from '../assets/images/logo.png'
+import ReservationScreen from "./ReservationScreen";
 import HomeScreen from './HomeScreen';
 import AboutScreen from "./AboutScreen";
-import ContactScreen from "./ContactScreen";
+// import ContactScreen from "./ContactScreen";
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchPartners } from '../features/partners/partnersSlice';
@@ -105,15 +106,15 @@ const AboutNavigator = () => {
   )
 }
 
-const ContactNavigator = () => {
+const ReservationNavigator = () => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
-        name="Contact"
-        component={ContactScreen}
+        name="Reservation"
+        component={ReservationScreen}
         options={({ navigation }) => ({
-          title: "Contact Us",
+          title: "Reservation Search",
           headerLeft: () => {
             <Icon
               name="address-card"
@@ -216,10 +217,10 @@ const Main = () => {
           }}
         />
         <Drawer.Screen
-          name='Contact'
-          component={ContactNavigator}
+          name='ReserveCampsite'
+          component={ReservationNavigator}
           options={{
-            title: 'Contact Us',
+            title: 'Reserve Campsite',
             drawerIcon: ({ color }) => (
               <Icon
                 name='address-card'
