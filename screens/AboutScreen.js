@@ -4,6 +4,7 @@ import { Avatar, Card, ListItem } from 'react-native-elements';
 // import { PARTNERS } from "../shared/partners";
 import { useSelector } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
+import Loading from '../components/LoadingComponent';
 const Mission = () => {
     return (
         <Card>
@@ -16,15 +17,17 @@ const Mission = () => {
 const AboutScreen = () => {
     // const [partners, setPartners] = useState(PARTNERS);
     const partners = useSelector((state) => state.partners);
-    return (
-        <ScrollView>
-            <Mission />
-            <Card>
-                <Card.Title>
-                    Community Partners
-                </Card.Title>
-            <Card.Divider/>
-                {partners.partnersArray.map((partner) => {
+    if (partners.isLoading) {
+        return (
+            <ScrollView>
+                <Mission />
+                <Card>
+                    <Card.Title>
+                        Community Partners
+                    </Card.Title>
+                    <Card.Divider />
+                    <Loading />
+                    {/* {partners.partnersArray.map((partner) => {
                     return (
                         <ListItem key={partner.id}>
                             <Avatar source={{uri: baseUrl + partner.image}} rounded/>
@@ -34,9 +37,45 @@ const AboutScreen = () => {
                             </ListItem.Content>
                         </ListItem>
                     )
-                })}
+                })} */}
+                </Card>
+            </ScrollView>
+        )
+    }
+    if (partners.errMess) {
+        return (
+            <ScrollView>
+                <Mission />
+                <Card>
+                    <Card.Title>Community Partners</Card.Title>
+                    <Card.Divider />
+                    <Text>{partners.errMess}</Text>
+                </Card>
+            </ScrollView>
+        );
+    }
+    return (
+        <ScrollView>
+            <Mission />
+            <Card>
+                <Card.Title>Community Partners</Card.Title>
+                <Card.Divider />
+                {partners.partnersArray.map((partner) => (
+                    <ListItem key={partner.id}>
+                        <Avatar
+                            rounded
+                            source={{ uri: baseUrl + partner.image }}
+                        />
+                        <ListItem.Content>
+                            <ListItem.Title>{partner.name}</ListItem.Title>
+                            <ListItem.Subtitle>
+                                {partner.description}
+                            </ListItem.Subtitle>
+                        </ListItem.Content>
+                    </ListItem>
+                ))}
             </Card>
         </ScrollView>
-    )
+    );
 }
 export default AboutScreen;
