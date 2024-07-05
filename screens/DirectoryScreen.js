@@ -1,8 +1,9 @@
 import { FlatList, Text, View } from "react-native";
 import Loading from "../components/LoadingComponent";
-import { Tile  } from "react-native-elements"; // Avatar, ListItem
+import { Tile } from "react-native-elements"; // Avatar, ListItem
 import { useSelector } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
+import * as Animatable from 'react-native-animatable';
 // import { useState } from "react";
 // import { CAMPSITES } from "../shared/campsites";
 const DirectoryScreen = ({ navigation }) => {
@@ -20,13 +21,15 @@ const DirectoryScreen = ({ navigation }) => {
     }
     const renderDirectoryItem = ({ item: campsite }) => {
         return (
-            <Tile 
-            onPress={() => navigation.navigate("CampsiteInfo", { campsite })}
-            title={campsite.name}
-            caption={campsite.description}
-            featured
-            imageSrc={{ uri: baseUrl + campsite.image }}
-            />
+            <Animatable.View animation='fadeInRightBig' duration={2000}>
+                <Tile
+                    onPress={() => navigation.navigate("CampsiteInfo", { campsite })}
+                    title={campsite.name}
+                    caption={campsite.description}
+                    featured
+                    imageSrc={{ uri: baseUrl + campsite.image }}
+                />
+            </Animatable.View>
             // <ListItem onPress={() => navigation.navigate("CampsiteInfo", { campsite })}>
             //     <Avatar source={campsite.image} rounded />
             //     <ListItem.Content>
