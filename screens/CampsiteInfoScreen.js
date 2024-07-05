@@ -95,21 +95,20 @@ const CampsiteInfoScreen = ({ route }) => {
                         leftIcon={{ type: 'font-awesome', name: 'user-o' }}
                         leftIconContainerStyle={{ paddingRight: 10 }}
                         onChangeText={(value) => setAuthor(value)}
-                        value
+                        value={author}
                     />
                     <Input
                         placeholder='Comment'
                         leftIcon={{ type: 'font-awesome', name: 'comment-o' }}
                         leftIconContainerStyle={{ paddingRight: 10 }}
                         onChangeText={(value) => setText(value)}
-                        value
+                        value={text}
                     /><View style={{ margin: 10 }}>
                         <Button
                             title='Submit'
                             color='#5637DD'
                             onPress={() => {
                                 handleSubmit();
-                                setShowModal(!showModal);
                                 resetForm();
                             }}
                         />
