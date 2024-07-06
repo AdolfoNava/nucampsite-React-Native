@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, Text, View, Button, Modal } from 'react-native';
 import RenderCampsite from '../features/campsites/RenderCampsite.js';
 // import {COMMENTS} from '../shared/comments.js';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleFavorite } from '../favorites/favoriteSlice.js';
+import { toggleFavorite } from '../features/favorites/favoriteSlice.js';
 import { Rating, Input } from 'react-native-elements';
 import { postComment } from '../features/comments/commentsSlice.js';
 import * as Animatable from 'react-native-animatable'
