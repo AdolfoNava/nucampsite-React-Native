@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as ImagePicker from 'expo-image-picker';
 import { baseUrl } from '../shared/baseUrl';
 import logo from '../assets/images/logo.png';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const LoginTab = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -131,83 +132,7 @@ const RegisterTab = () => {
                 console.log('Could not delete user info', error)
             );
         }
-        return (
-            <ScrollView>
-                <View style={styles.container}>
-                    <View style={styles.imageContainer}>
-                        <Image
-                            source={{ uri: imageUrl }}
-                            loadingIndicatorSource={logo}
-                            style={styles.image}
-                        />
-                        <Button title='Camera' onPress={getImageFromCamera} />
-                    </View>
-                    <Input
-                        placeholder='Username'
-                        leftIcon={{ type: 'font-awesome', name: 'user-o' }}
-                        onChangeText={(text) => setUsername(text)}
-                        value={username}
-                        containerStyle={styles.formInput}
-                        leftIconContainerStyle={styles.formIcon}
-                    />
-                    <Input
-                        placeholder='Password'
-                        leftIcon={{ type: 'font-awesome', name: 'key' }}
-                        onChangeText={(text) => setPassword(text)}
-                        value={password}
-                        containerStyle={styles.formInput}
-                        leftIconContainerStyle={styles.formIcon}
-                    />
-                    <Input
-                        placeholder='First Name'
-                        leftIcon={{ type: 'font-awesome', name: 'user-o' }}
-                        onChangeText={(text) => setFirstName(text)}
-                        value={firstName}
-                        containerStyle={styles.formInput}
-                        leftIconContainerStyle={styles.formIcon}
-                    />
-                    <Input
-                        placeholder='Last Name'
-                        leftIcon={{ type: 'font-awesome', name: 'user-o' }}
-                        onChangeText={(text) => setLastName(text)}
-                        value={lastName}
-                        containerStyle={styles.formInput}
-                        leftIconContainerStyle={styles.formIcon}
-                    />
-                    <Input
-                        placeholder='Email'
-                        leftIcon={{ type: 'font-awesome', name: 'user-o' }}
-                        onChangeText={(text) => setEmail(text)}
-                        value={email}
-                        containerStyle={styles.formInput}
-                        leftIconContainerStyle={styles.formIcon}
-                    />
-                    <CheckBox
-                        title='Remember Me'
-                        center
-                        checked={remember}
-                        onPress={() => setRemember(!remember)}
-                        containerStyle={styles.formCheckbox}
-                    />
-                    <View style={styles.formButton}>
-                        <Button
-                            onPress={() => handleRegister()}
-                            title='Register'
-                            color='#5637DD'
-                            icon={
-                                <Icon
-                                    name='user-plus'
-                                    type='font-awesome'
-                                    color='#fff'
-                                    iconStyle={{ marginRight: 10 }}
-                                />
-                            }
-                            buttonStyle={{ backgroundColor: '#5637DD' }}
-                        />
-                    </View>
-                </View>
-            </ScrollView>);
-    };
+    }
     const getImageFromCamera = async () => {
         const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
         if (cameraPermission.status === 'granted') {
@@ -217,11 +142,114 @@ const RegisterTab = () => {
             });
             if (capturedImage.assets) {
                 console.log(capturedImage.assets[0]);
-                setImageUrl(capturedImage.assets[0], uri);
+                processImage(capturedImage.assets[0].uri);
             }
         }
     }
+    const getImageFromGallery = async () => {
+        const mediaLibraryPermissions = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if(mediaLibraryPermissions.status === 'granted'){
+            const capturedImage = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [1,1]
+            });
+            if(capturedImage.assets){
+                console.log(capturedImage.assets[0]);
+                processImage(capturedImage.assets[0].uri);
+            }
+        }
+    }
+    const processImage = async (imgUri) => {
+        const processedImage = await ImageManipulator.manipulateAsync(
+            imgUri, [{resize:{ width: 400} }], { format: ImageManipulator.SaveFormat.PNG }
+        )
+        setImageUrl(processedImage.uri);
+        console.log(processedImage);
+        return processedImage;
+    }
+    return (
+        <ScrollView>
+            <View style={styles.container}>
+                <View style={styles.imageContainer}>
+                    <Image
+                        source={{ uri: imageUrl }}
+                        loadingIndicatorSource={logo}
+                        style={styles.image}
+                    />
+                    <Button title='Camera' onPress={getImageFromCamera} />
+                    <Button title='Gallery' onPress={getImageFromGallery}/>
+                </View>
+                <Input
+                    placeholder='Username'
+                    leftIcon={{ type: 'font-awesome', name: 'user-o' }}
+                    onChangeText={(text) => setUsername(text)}
+                    value={username}
+                    containerStyle={styles.formInput}
+                    leftIconContainerStyle={styles.formIcon}
+                />
+                <Input
+                    placeholder='Password'
+                    leftIcon={{ type: 'font-awesome', name: 'key' }}
+                    onChangeText={(text) => setPassword(text)}
+                    value={password}
+                    containerStyle={styles.formInput}
+                    leftIconContainerStyle={styles.formIcon}
+                />
+                <Input
+                    placeholder='First Name'
+                    leftIcon={{ type: 'font-awesome', name: 'user-o' }}
+                    onChangeText={(text) => setFirstName(text)}
+                    value={firstName}
+                    containerStyle={styles.formInput}
+                    leftIconContainerStyle={styles.formIcon}
+                />
+                <Input
+                    placeholder='Last Name'
+                    leftIcon={{ type: 'font-awesome', name: 'user-o' }}
+                    onChangeText={(text) => setLastName(text)}
+                    value={lastName}
+                    containerStyle={styles.formInput}
+                    leftIconContainerStyle={styles.formIcon}
+                />
+                <Input
+                    placeholder='Email'
+                    leftIcon={{ type: 'font-awesome', name: 'user-o' }}
+                    onChangeText={(text) => setEmail(text)}
+                    value={email}
+                    containerStyle={styles.formInput}
+                    leftIconContainerStyle={styles.formIcon}
+                />
+                <CheckBox
+                    title='Remember Me'
+                    center
+                    checked={remember}
+                    onPress={() => setRemember(!remember)}
+                    containerStyle={styles.formCheckbox}
+                />
+                <View style={styles.formButton}>
+                    <Button
+                        onPress={() => handleRegister()}
+                        title='Register'
+                        color='#5637DD'
+                        icon={
+                            <Icon
+                                name='user-plus'
+                                type='font-awesome'
+                                color='#fff'
+                                iconStyle={{ marginRight: 10 }}
+                            />
+                        }
+                        buttonStyle={{ backgroundColor: '#5637DD' }}
+                    />
+                </View>
+            </View>
+        </ScrollView>);
 };
+
+
+
+
+
 
 const Tab = createBottomTabNavigator();
 

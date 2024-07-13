@@ -204,12 +204,11 @@ const Main = () => {
     dispatch(fetchPartners());
     dispatch(fetchComments());
   }, [dispatch]);
-
-  useEffect(() => {
-    NetInfo.fetch().then((connectionInfo) => {
+  const showNetInfo = async () => {
+    await NetInfo.fetch().then((connectionInfo) => {
       Platform.OS === 'ios'
         ? Alert.alert(
-          'Initial Network Connectivity Type:',
+          'Initial Network Connectivity Type: ' +
           connectionInfo.type
         )
         : ToastAndroid.show(
@@ -218,14 +217,17 @@ const Main = () => {
           ToastAndroid.LONG
         );
     })
+  }
+  useEffect(() => {
+    showNetInfo();
     const unsubscribeNetInfo = NetInfo.addEventListener(
       (connectionInfo) => {
         handleConnectivityChange(connectionInfo);
       }
-
     )
     return unsubscribeNetInfo;
   }, []);
+
   const handleConnectivityChange = (connectionInfo) => {
     let connectionMsg = 'You are now connected to an active network.';
     switch (connectionInfo.type) {
@@ -242,11 +244,11 @@ const Main = () => {
         connectionMsg = 'You are now connected to a WiFi network.';
         break;
     }
-    Platform.OS === 'ios' 
-    ? Alert.alert('Connection change:', connectionMsg)
-    : ToastAndroid.show(connectionMsg, ToastAndroid.LONG);
+    Platform.OS === 'ios'
+      ? Alert.alert('Connection change:', connectionMsg)
+      : ToastAndroid.show(connectionMsg, ToastAndroid.LONG);
   }
-  
+
   return (
     <View style={{
       flex: 1,
@@ -255,7 +257,7 @@ const Main = () => {
     }}
     >
       <Drawer.Navigator
-        initialRouteName="Home"
+        initialRouteName="HomeDrawer"
         screenOptions={{ drawerStyle: { backgroundColor: "#CEC8FF" } }}
         drawerContent={CustomDrawerContent}
       >
